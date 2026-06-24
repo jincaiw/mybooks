@@ -29,6 +29,8 @@ jobs:
         run: python3 scripts/prepare_pages.py
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          source: books/book-1/docs
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
