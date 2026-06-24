@@ -1,6 +1,6 @@
 # 第二本书
 
-> 这是 book-2 的模板骨架，把 README.md 改成你的书名和简介即可。
+> 这是模板书籍骨架。把 `README.md`、`VERSION`、`docs/index.md` 改成你的书名和简介即可。
 
 <!-- TODO: 书名与简介 -->
 
@@ -19,7 +19,7 @@
 ## 仓库结构
 
 ```
-book-2/
+2.模板书籍/
 ├── book/              # 正式发布的书稿（PDF + MD + SHA256）
 ├── assets/            # 图片、封面等资源
 ├── docs/              # GitHub Pages 源
@@ -42,8 +42,8 @@ python3 scripts/validate.py
 4. 打 Tag 并推送
 
 ```bash
-git tag -a book-2-v0.01 -m "book-2: Release v0.01"
-git push origin book-2-v0.01
+git tag -a 2.模板书籍-v0.01 -m "2.模板书籍: Release v0.01"
+git push origin 2.模板书籍-v0.01
 ```
 
 Tag 推送后 Release 工作流会自动上传产物。

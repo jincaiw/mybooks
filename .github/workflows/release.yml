@@ -3,14 +3,14 @@ name: Publish Release
 on:
   push:
     tags:
-      - "*-v*"          # 匹配 book-1-v0.02, book-2-v0.01 等
+      - "*-v*"          # 匹配 1.GitHub版本发布与云原生GitOps实战教程-v0.02 等
   workflow_dispatch:
     inputs:
       book:
-        description: Book directory name (e.g. book-1, book-2)
+        description: Book directory name (e.g. 1.GitHub版本发布与云原生GitOps实战教程)
         required: true
       tag:
-        description: Existing version tag, for example book-1-v0.02
+        description: Existing version tag, for example 1.GitHub版本发布与云原生GitOps实战教程-v0.02
         required: true
 
 permissions:
@@ -41,7 +41,7 @@ jobs:
           else
             TAG="${{ inputs.tag }}"
           fi
-          # tag format: book-1-v0.02  → book=book-1, version=v0.02
+          # tag format: 1.书名-v0.02  → book=1.书名, version=v0.02
           BOOK="${TAG%-v*}"
           VERSION="${TAG#*-v}"
           echo "book=$BOOK" >> "$GITHUB_OUTPUT"

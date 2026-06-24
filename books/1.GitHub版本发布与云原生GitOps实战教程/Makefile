@@ -1,6 +1,6 @@
 .PHONY: validate pages clean tag
 
-BOOK ?= book-1
+BOOK ?= 1.GitHub版本发布与云原生GitOps实战教程
 
 validate:
 	python3 scripts/validate.py
