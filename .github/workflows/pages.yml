@@ -14,91 +14,71 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Detect books
-        id: books
+      - id: books
         run: |
-          BOOKS=$(ls -d books/*/ 2>/dev/null | sed 's|books/||;s|/||' | tr '\n' ' ')
-          echo "list=$BOOKS" >> "$GITHUB_OUTPUT"
+          books=$(ls -d books/*/ 2>/dev/null | sed 's|books/||;s|/||' | tr '\n' ' ')
+          echo "list=$books" >> "$GITHUB_OUTPUT"
 
-      - name: Prepare pages for each book
-        run: |
-          for book in ${{ steps.books.outputs.list }}; do
-            echo "=== Preparing pages for $book ==="
-            cd "books/$book"
-            python3 scripts/prepare_pages.py || echo "⚠️  $book skipped (incomplete content)"
-            cd "${{ github.workspace }}"
+      - run: |
+          for b in ${{ steps.books.outputs.list }}; do
+            echo "Preparing $b"
+            cd "books/$b"
+            python3 scripts/prepare_pages.py || true
+            cd "$GITHUB_WORKSPACE"
           done
+        name: Prepare pages
 
-      - name: Assemble site into ./docs
-        run: |
+      - run: |
           mkdir -p docs
-          for book in ${{ steps.books.outputs.list }}; do
-            if [ -d "books/$book/docs" ]; then
-              mkdir -p "docs/$book"
-              cp -r "books/$book/docs/"* "docs/$book/"
+          for b in ${{ steps.books.outputs.list }}; do
+            d="books/$b/docs"
+            if [ -d "$d" ]; then
+              mkdir -p "docs/$b"
+              cp -r "$d/"* "docs/$b/"
             fi
           done
+        name: Assemble site
 
-      - name: Create root index page
-        run: |
-          cat > docs/index.md << 'INDEXEOF'
----
-layout: default
-title: MyBook - 书籍列表
----
-
-# MyBook 书籍列表
-
-INDEXEOF
-          for book in ${{ steps.books.outputs.list }}; do
-            TITLE=$(head -1 "books/$book/README.md" 2>/dev/null | sed 's/^# *//' || echo "$book")
-            echo "- [$TITLE](${book}/)" >> docs/index.md
+      - run: |
+          printf -- '---\nlayout: default\ntitle: MyBook\n---\n\n# MyBook\n\n' > docs/index.md
+          for b in ${{ steps.books.outputs.list }}; do
+            printf -- '- [%s](%s/)\n' "$b" "$b" >> docs/index.md
           done
-          echo "" >> docs/index.md
+        name: Create index
 
-      - name: Create root _config.yml for Jekyll
-        run: |
-          cat > docs/_config.yml << 'CONFIG'
-title: MyBook
-description: A collection of books
-theme: jekyll-theme-cayman
-lang: zh-CN
-markdown: kramdown
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-CONFIG
+      - run: |
+          printf -- 'title: MyBook\ntheme: jekyll-theme-cayman\nlang: zh-CN\n' > docs/_config.yml
+        name: Jekyll config
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v5
         with:
           source: docs
 
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
+      - uses: actions/jekyll-build-pages@v1
         with:
           source: ./docs
           destination: ./_site
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v4
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
