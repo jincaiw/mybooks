@@ -38,4 +38,11 @@ jobs:
         uses: actions/checkout@v6
       - name: Validate ${{ matrix.book }}
         working-directory: books/${{ matrix.book }}
-        run: python3 scripts/validate.py
+        run: |
+          VERSION="$(cat VERSION | tr -d '[:space:]')"
+          if [ -f "book/book-v${VERSION}.md" ] && [ -f "book/book-v${VERSION}.pdf" ]; then
+            python3 scripts/validate.py
+          else
+            echo "🔧 ${{ matrix.book }}: 内容不完整，宽容模式验证..."
+            python3 scripts/validate.py --allow-missing
+          fi

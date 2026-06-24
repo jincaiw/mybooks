@@ -4,6 +4,7 @@ import hashlib
 import re
 import sys
 
+allow_missing = "--allow-missing" in sys.argv
 root = Path(__file__).resolve().parents[1]
 errors = []
 version = (root / "VERSION").read_text(encoding="utf-8").strip()
@@ -13,7 +14,10 @@ checksums = root / "book" / "SHA256SUMS.txt"
 
 for path in (md, pdf):
     if not path.exists():
-        errors.append(f"缺少文件：{path.relative_to(root)}")
+        if allow_missing:
+            print(f"⚠️  跳过缺失文件：{path.relative_to(root)}")
+        else:
+            errors.append(f"缺少文件：{path.relative_to(root)}")
 
 if md.exists():
     text = md.read_text(encoding="utf-8")

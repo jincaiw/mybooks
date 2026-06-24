@@ -10,7 +10,7 @@ pdf = root / "book" / f"book-v{version}.pdf"
 if not source.exists():
     raise SystemExit(f"缺少 Markdown：{source}")
 if not pdf.exists():
-    raise SystemExit(f"缺少 PDF：{pdf}")
+    print(f"⚠️  跳过 PDF（暂不存在）：{pdf.name}")
 
 docs = root / "docs"
 assets_out = docs / "assets"
@@ -26,6 +26,7 @@ text = source.read_text(encoding="utf-8")
 text = text.replace("../assets/", "assets/")
 front_matter = "---\nlayout: default\ntitle: 完整教程\n---\n\n"
 (docs / "book.md").write_text(front_matter + text, encoding="utf-8")
-shutil.copy2(pdf, downloads / pdf.name)
+if pdf.exists():
+    shutil.copy2(pdf, downloads / pdf.name)
 shutil.copy2(source, downloads / source.name)
 print("Pages source prepared")

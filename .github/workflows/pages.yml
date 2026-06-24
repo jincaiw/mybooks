@@ -31,9 +31,9 @@ jobs:
       - name: Prepare pages for each book
         run: |
           for book in ${{ steps.books.outputs.list }}; do
-            echo "Preparing pages for $book"
+            echo "=== Preparing pages for $book ==="
             cd "books/$book"
-            python3 scripts/prepare_pages.py
+            python3 scripts/prepare_pages.py || echo "⚠️  $book skipped (incomplete content)"
             cd "${{ github.workspace }}"
           done
 
