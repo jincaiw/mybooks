@@ -1,0 +1,27 @@
+name: 内容勘误
+about: 报告书中错误、过时内容或表达问题
+title: "[勘误] "
+labels: [documentation]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: 位置
+      description: 章节、页码或小节
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: 当前内容或问题
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 建议修改
+  - type: textarea
+    id: source
+    attributes:
+      label: 参考依据
+      description: 优先提供官方文档或可复现步骤

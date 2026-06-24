@@ -1,0 +1,28 @@
+name: 系统问题
+about: 报告 Pages、Release 或工作流问题
+title: "[系统] "
+labels: [bug]
+body:
+  - type: dropdown
+    id: component
+    attributes:
+      label: 组件
+      options:
+        - Validate workflow
+        - GitHub Pages
+        - Release workflow
+        - PDF or Markdown download
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或截图
+      render: shell

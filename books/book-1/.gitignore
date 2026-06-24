@@ -1,0 +1,8 @@
+.DS_Store
+_site/
+.cache/
+__pycache__/
+*.pyc
+docs/book.md
+docs/assets/
+docs/downloads/
