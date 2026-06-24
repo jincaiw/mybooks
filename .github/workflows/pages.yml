@@ -66,10 +66,6 @@ jobs:
             'lang: zh-CN' > docs/_config.yml
         name: Jekyll config
 
-      - uses: actions/configure-pages@v5
-        with:
-          static_site_generator: jekyll
-
       - uses: actions/jekyll-build-pages@v1
         with:
           source: ./docs
