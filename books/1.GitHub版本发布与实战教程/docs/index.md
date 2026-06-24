@@ -15,7 +15,7 @@ title: 首页
 - [在线阅读完整教程](book.html)
 - [下载 PDF](downloads/book-v0.02.pdf)
 - [下载 Markdown](downloads/book-v0.02.md)
-- [查看 GitHub Release](https://github.com/jincaiw/mybook/releases/latest)
+- [查看 GitHub Release](https://github.com/jincaiw/mybooks/releases/latest)
 
 ## 学习路线
 

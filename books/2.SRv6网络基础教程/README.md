@@ -9,8 +9,8 @@
 
 ## 在线阅读与下载
 
-- 在线阅读：<https://jincaiw.github.io/mybook/>
-- 最新 Release：<https://github.com/jincaiw/mybook/releases/latest>
+- 在线阅读：<https://jincaiw.github.io/mybooks/>
+- 最新 Release：<https://github.com/jincaiw/mybooks/releases/latest>
 - PDF：[`book/book-v0.02.pdf`](book/book-v0.02.pdf)
 - Markdown：[`book/book-v0.02.md`](book/book-v0.02.md)
 

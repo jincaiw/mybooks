@@ -1,8 +1,8 @@
 # GitHub 版本发布与实战教程
 
-[![Validate](https://github.com/jincaiw/mybook/actions/workflows/validate.yml/badge.svg)](https://github.com/jincaiw/mybook/actions/workflows/validate.yml)
-[![Pages](https://github.com/jincaiw/mybook/actions/workflows/pages.yml/badge.svg)](https://github.com/jincaiw/mybook/actions/workflows/pages.yml)
-[![Release](https://img.shields.io/github/v/release/jincaiw/mybook)](https://github.com/jincaiw/mybook/releases/latest)
+[![Validate](https://github.com/jincaiw/mybooks/actions/workflows/validate.yml/badge.svg)](https://github.com/jincaiw/mybooks/actions/workflows/validate.yml)
+[![Pages](https://github.com/jincaiw/mybooks/actions/workflows/pages.yml/badge.svg)](https://github.com/jincaiw/mybooks/actions/workflows/pages.yml)
+[![Release](https://img.shields.io/github/v/release/jincaiw/mybooks)](https://github.com/jincaiw/mybooks/releases/latest)
 [![License: CC BY 4.0](https://img.shields.io/badge/book-CC%20BY%204.0-lightgrey.svg)](LICENSE.md)
 
 作者：**jason.wa**  
@@ -12,8 +12,8 @@
 
 ## 在线阅读与下载
 
-- 在线阅读：<https://jincaiw.github.io/mybook/>
-- 最新 Release：<https://github.com/jincaiw/mybook/releases/latest>
+- 在线阅读：<https://jincaiw.github.io/mybooks/>
+- 最新 Release：<https://github.com/jincaiw/mybooks/releases/latest>
 - PDF：发布后可在 Release Assets 下载
 - Markdown：[`book/book-v0.02.md`](book/book-v0.02.md)
 

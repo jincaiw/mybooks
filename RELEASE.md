@@ -198,7 +198,7 @@ git push origin 1.GitHub版本发布与实战教程-v0.03
 | `.github/workflows/pages.yml` | 推送 main / 手动 | 构建并部署 GitHub Pages 站点 |
 | `.github/workflows/release.yml` | 推送 Tag `*-v*` / 手动 | 创建 GitHub Release 并上传产物 |
 
-Pages 站点地址：<https://jincaiw.github.io/mybook/>
+Pages 站点地址：<https://jincaiw.github.io/mybooks/>
 
 ---
 

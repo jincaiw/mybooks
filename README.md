@@ -13,7 +13,7 @@
 
 ## 在线阅读
 
-- **GitHub Pages**：<https://jincaiw.github.io/mybook/>
+- **GitHub Pages**：<https://jincaiw.github.io/mybooks/>
 
 Pages 在每次推送 `main` 分支后自动构建部署，无需手动操作。
 

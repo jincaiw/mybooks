@@ -3,7 +3,7 @@ name: Publish Release
 on:
   push:
     tags:
-      - "*-v*"          # 匹配 1.GitHub版本发布与实战教程-v0.02 等
+      - "*-v*" # 匹配 1.GitHub版本发布与实战教程-v0.02 等
   workflow_dispatch:
     inputs:
       book:
