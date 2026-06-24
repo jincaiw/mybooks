@@ -51,19 +51,24 @@ jobs:
         name: Assemble site
 
       - run: |
-          printf -- '---\nlayout: default\ntitle: MyBook\n---\n\n# MyBook\n\n' > docs/index.md
+          printf '%s\n' \
+            '---' 'layout: default' \
+            'title: MyBook' '---' \
+            '' '# MyBook' '' > docs/index.md
           for b in ${{ steps.books.outputs.list }}; do
             printf -- '- [%s](%s/)\n' "$b" "$b" >> docs/index.md
           done
         name: Create index
 
       - run: |
-          printf -- 'title: MyBook\ntheme: jekyll-theme-cayman\nlang: zh-CN\n' > docs/_config.yml
+          printf '%s\n' 'title: MyBook' \
+            'theme: jekyll-theme-cayman' \
+            'lang: zh-CN' > docs/_config.yml
         name: Jekyll config
 
       - uses: actions/configure-pages@v5
         with:
-          source: docs
+          static_site_generator: jekyll
 
       - uses: actions/jekyll-build-pages@v1
         with:
