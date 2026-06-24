@@ -3,11 +3,14 @@ name: Publish Release
 on:
   push:
     tags:
-      - "v*"
+      - "*-v*"          # 匹配 book-1-v0.02, book-2-v0.01 等
   workflow_dispatch:
     inputs:
+      book:
+        description: Book directory name (e.g. book-1, book-2)
+        required: true
       tag:
-        description: Existing version tag, for example v0.02
+        description: Existing version tag, for example book-1-v0.02
         required: true
 
 permissions:
@@ -28,28 +31,60 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Validate book
-        working-directory: books/book-1
-        run: python3 scripts/validate.py
-      - name: Resolve tag
-        id: tag
+
+      - name: Parse book and version from tag / inputs
+        id: parse
         shell: bash
         run: |
           if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
-            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            TAG="${GITHUB_REF_NAME}"
           else
-            echo "value=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+            TAG="${{ inputs.tag }}"
           fi
+          # tag format: book-1-v0.02  → book=book-1, version=v0.02
+          BOOK="${TAG%-v*}"
+          VERSION="${TAG#*-v}"
+          echo "book=$BOOK" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Validate book content
+        working-directory: books/${{ steps.parse.outputs.book }}
+        run: python3 scripts/validate.py
+
+      - name: Verify tag matches VERSION file
+        shell: bash
+        run: |
+          EXPECTED="$(tr -d '[:space:]' < "books/${{ steps.parse.outputs.book }}/VERSION")"
+          if [[ "${{ steps.parse.outputs.version }}" != "$EXPECTED" ]]; then
+            echo "ERROR: Tag version (v${{ steps.parse.outputs.version }}) != VERSION file ($EXPECTED)"
+            exit 1
+          fi
+
       - name: Create release
         shell: bash
         run: |
-          VERSION="$(tr -d '[:space:]' < books/book-1/VERSION)"
-          TAG="${{ steps.tag.outputs.value }}"
-          test "$TAG" = "v$VERSION"
+          BOOK="${{ steps.parse.outputs.book }}"
+          VERSION="${{ steps.parse.outputs.version }}"
+          TAG="${{ steps.parse.outputs.tag }}"
+          BOOK_DIR="books/${BOOK}"
+
+          # Determine which assets exist
+          ASSETS=()
+          for f in "${BOOK_DIR}/book/book-v${VERSION}.pdf" "${BOOK_DIR}/book/book-v${VERSION}.md" "${BOOK_DIR}/book/SHA256SUMS.txt"; do
+            if [[ -f "$f" ]]; then
+              ASSETS+=("$f")
+            fi
+          done
+
+          NOTES_FILE="${BOOK_DIR}/release-notes/v${VERSION}.md"
+          if [[ ! -f "$NOTES_FILE" ]]; then
+            NOTES_FILE=""
+          fi
+
+          echo "Creating release: $TAG for $BOOK (v$VERSION)"
           gh release create "$TAG" \
-            "books/book-1/book/book-v${VERSION}.pdf" \
-            "books/book-1/book/book-v${VERSION}.md" \
-            "books/book-1/book/SHA256SUMS.txt" \
-            --title "$TAG" \
-            --notes-file "books/book-1/release-notes/v${VERSION}.md" \
+            ${ASSETS[@]+"${ASSETS[@]}"} \
+            --title "$BOOK v$VERSION" \
+            ${NOTES_FILE:+--notes-file "$NOTES_FILE"} \
             --verify-tag

@@ -1,4 +1,4 @@
-name: Validate Book
+name: Validate Books
 
 on:
   push:
@@ -14,12 +14,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  list-books:
+    runs-on: ubuntu-latest
+    outputs:
+      books: ${{ steps.list.outputs.books }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: list
+        run: |
+          BOOKS=$(ls -d books/*/ 2>/dev/null | sed 's|books/||;s|/||' | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "books=$BOOKS" >> "$GITHUB_OUTPUT"
+
   validate:
+    needs: list-books
+    strategy:
+      matrix:
+        book: ${{ fromJSON(needs.list-books.outputs.books) }}
+      fail-fast: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Validate repository
-        working-directory: books/book-1
+      - name: Validate ${{ matrix.book }}
+        working-directory: books/${{ matrix.book }}
         run: python3 scripts/validate.py

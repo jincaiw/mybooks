@@ -21,25 +21,61 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Validate book
-        working-directory: books/book-1
-        run: python3 scripts/validate.py
-      - name: Prepare Pages source
-        working-directory: books/book-1
-        run: python3 scripts/prepare_pages.py
+
+      - name: Detect books
+        id: books
+        run: |
+          BOOKS=$(ls -d books/*/ 2>/dev/null | sed 's|books/||;s|/||' | tr '\n' ' ')
+          echo "list=$BOOKS" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare pages for each book
+        run: |
+          for book in ${{ steps.books.outputs.list }}; do
+            echo "Preparing pages for $book"
+            cd "books/$book"
+            python3 scripts/prepare_pages.py
+            cd "${{ github.workspace }}"
+          done
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          for book in ${{ steps.books.outputs.list }}; do
+            mkdir -p "_site/$book"
+            cp -r "books/$book/docs/"* "_site/$book/"
+          done
+
+      - name: Create root index
+        run: |
+          cat > _site/index.md << 'INDEX'
+---
+layout: default
+title: MyBook - 书籍列表
+---
+
+# MyBook 书籍列表
+
+INDEX
+          for book in ${{ steps.books.outputs.list }}; do
+            TITLE=$(head -1 "books/$book/README.md" 2>/dev/null | sed 's/^# *//' || echo "$book")
+            echo "- [$TITLE](${book}/)" >> _site/index.md
+          done
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
-          source: books/book-1/docs
+          source: _site
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: books/book-1/docs
-          destination: ./_site
+          source: _site
+          destination: ./_site_out
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./_site
+          path: ./_site_out
 
   deploy:
     environment:

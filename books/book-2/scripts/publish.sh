@@ -3,7 +3,6 @@ set -euo pipefail
 
 OWNER="jincaiw"
 REPO="mybook"
-BOOK_DIR="$(basename "$(cd "$(dirname "$0")/.." && pwd)")"
 VERSION="$(tr -d '[:space:]' < VERSION)"
 
 command -v git >/dev/null || { echo "缺少 git"; exit 1; }
@@ -17,22 +16,21 @@ if [[ ! -d .git ]]; then
 fi
 
 git add .
-git commit -m "release: ${BOOK_DIR} v${VERSION}" || true
+git commit -m "release: publish book v${VERSION}" || true
 
 if gh repo view "$OWNER/$REPO" >/dev/null 2>&1; then
   git remote get-url origin >/dev/null 2>&1 || git remote add origin "https://github.com/$OWNER/$REPO.git"
 else
   gh repo create "$OWNER/$REPO" --public \
-    --description "MyBook - ${BOOK_DIR}" \
+    --description "GitHub 版本发布与云原生 GitOps 实战教程" \
     --source . --remote origin
 fi
 
 git push -u origin main
 
-TAG="${BOOK_DIR}-v${VERSION}"
-if ! git rev-parse "${TAG}" >/dev/null 2>&1; then
-  git tag -a "${TAG}" -m "${BOOK_DIR}: Release v${VERSION}"
+if ! git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+  git tag -a "v${VERSION}" -m "Release v${VERSION}"
 fi
-git push origin "${TAG}"
+git push origin "v${VERSION}"
 
 echo "Published: https://github.com/$OWNER/$REPO"

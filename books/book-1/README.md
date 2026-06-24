@@ -57,8 +57,8 @@ python3 scripts/validate.py
 4. 创建版本 Tag，例如：
 
 ```bash
-git tag -a v0.03 -m "Release v0.03"
-git push origin v0.03
+git tag -a book-1-v0.03 -m "book-1: Release v0.03"
+git push origin book-1-v0.03
 ```
 
 Tag 推送后，Release 工作流会自动生成 SHA256，并将 PDF、Markdown 和校验文件上传到 GitHub Release。
