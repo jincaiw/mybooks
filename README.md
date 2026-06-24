@@ -4,9 +4,10 @@
 
 ## 书籍
 
-| 目录 | 说明 | 状态 |
+| 目录 | 说明 | 版本 |
 |------|------|------|
-| [`books/1.GitHub版本发布与实战教程/`](books/1.GitHub版本发布与实战教程/) | GitHub 版本发布与实战教程 | ✅ v0.02 已发布 |
+| [`books/1.GitHub版本发布与实战教程/`](books/1.GitHub版本发布与实战教程/) | GitHub 版本发布与实战教程 | v0.02 ✅ |
+| [`books/2.SRv6网络基础教程/`](books/2.SRv6网络基础教程/) | SRv6 网络基础教程 | v0.02 ✅ |
 | [`books/2.模板书籍/`](books/2.模板书籍/) | 模板骨架（写新书从此复制） | 🔧 模板 |
 | `books/N.书名/` | 更多书籍... | ⏳ 待创建 |
 
@@ -20,46 +21,34 @@ Pages 在每次推送 `main` 分支后自动构建部署，无需手动操作。
 
 | 工作流 | 触发条件 | 作用 |
 |--------|----------|------|
-| **Validate** | push / PR / 手动 | 校验所有书稿完整性 |
-| **Pages** | push main / 手动 | 构建并部署 GitHub Pages（多本书并列展示） |
-| **Release** | 推送 `*-v*` Tag / 手动 | 自动创建 GitHub Release 并上传产物 |
+| **Validate** | push / PR / 手动 | 自动检测所有 `books/N.书名/`，并行校验 |
+| **Pages** | push main / 手动 | 构建并部署 GitHub Pages，多本书并列展示 |
+| **Release** | 推送 `{书名}-v{版本}` Tag / 手动 | 自动创建 GitHub Release 并上传 PDF+MD+SHA256 |
 
-### 发布新版本流程
+### 发布新版本
 
 ```bash
-# 1. 更新 VERSION 文件
+# 以第一本书为例
 echo "0.03" > books/1.GitHub版本发布与实战教程/VERSION
-
-# 2. 更新书稿内容，生成 PDF + MD + SHA256
-#    （使用 import_book.sh 导入）
 cd books/1.GitHub版本发布与实战教程
 bash scripts/import_book.sh /path/to/book.pdf /path/to/book.md
-
-# 3. 本地校验
-python3 scripts/validate.py
-
-# 4. 更新 CHANGELOG.md 和 release-notes/
-
-# 5. 提交并推送
-git add .
-git commit -m "release: 1.GitHub版本发布与实战教程 v0.03"
+make validate
+git add . && git commit -m "release: 1.GitHub版本发布与实战教程 v0.03"
 git push origin main
-
-# 6. 打 Tag（命名规则：{目录名}-v{版本号}）
-git tag -a 1.GitHub版本发布与实战教程-v0.03 -m "1.GitHub版本发布与实战教程: Release v0.03"
-git push origin 1.GitHub版本发布与实战教程-v0.03
-#    ↑ 推送 Tag 后 Release 工作流自动运行
+make tag                          # 自动生成 Tag
+git push origin 1.GitHub版本发布与实战教程-v0.03   # → 自动创建 Release
 ```
 
-> **Tag 命名规则**：`{目录名}-v{版本号}`，例如 `1.GitHub版本发布与实战教程-v0.02`、`2.模板书籍-v0.01`。  
-> 工作流会自动解析出目录名和版本号。
+> **Tag 命名规则**：`{目录名}-v{版本号}`，例如：
+> - `1.GitHub版本发布与实战教程-v0.03`
+> - `2.SRv6网络基础教程-v0.03`
 
 ## 添加新书
 
 ```bash
-# 复制模板即可
 cp -r books/2.模板书籍 books/3.新书名
-# 然后修改 README.md、VERSION、docs/index.md 等内容
+# 然后修改 README.md、VERSION、docs/index.md、docs/_config.yml 等内容
+# CI/CD 自动识别新目录，无需改任何配置文件
 ```
 
 ## 目录结构
@@ -74,9 +63,16 @@ mybook/
 │   │   ├── docs/            # GitHub Pages 源
 │   │   ├── scripts/         # 校验和构建脚本
 │   │   ├── release-notes/   # 版本发布说明
-│   │   ├── VERSION
-│   │   └── README.md
-│   ├── 2.模板书籍/          # 模板骨架
+│   │   └── VERSION
+│   ├── 2.SRv6网络基础教程/      # 第二本书
+│   │   ├── book/            # 正式书稿 (PDF + MD + SHA256)
+│   │   ├── assets/          # 20 幅插图
+│   │   ├── docs/            # GitHub Pages 源
+│   │   ├── scripts/         # 校验和构建脚本
+│   │   ├── 实验脚本/         # 可执行实验
+│   │   ├── release-notes/
+│   │   └── VERSION
+│   ├── 2.模板书籍/           # 模板骨架（写新书从此复制）
 │   └── N.书名/              # 更多书籍...
 └── README.md                # 本文件
 ```
