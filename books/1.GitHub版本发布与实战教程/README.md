@@ -1,4 +1,4 @@
-# GitHub 版本发布与云原生 GitOps 实战教程
+# GitHub 版本发布与实战教程
 
 [![Validate](https://github.com/jincaiw/mybook/actions/workflows/validate.yml/badge.svg)](https://github.com/jincaiw/mybook/actions/workflows/validate.yml)
 [![Pages](https://github.com/jincaiw/mybook/actions/workflows/pages.yml/badge.svg)](https://github.com/jincaiw/mybook/actions/workflows/pages.yml)
@@ -8,7 +8,7 @@
 作者：**jason.wa**  
 当前版本：**v0.02**
 
-这是一本从 Git Commit、Tag、GitHub Release 开始，逐步进入 GitHub Actions、Docker、Kubernetes、Argo CD 与 GitOps 的系统教程。
+这是一本从 Git Commit、Tag、GitHub Release 开始，逐步进入 GitHub Actions、Docker、Kubernetes 与 GitOps 的系统教程。
 
 ## 在线阅读与下载
 
@@ -57,8 +57,8 @@ python3 scripts/validate.py
 4. 创建版本 Tag，例如：
 
 ```bash
-git tag -a 1.GitHub版本发布与云原生GitOps实战教程-v0.03 -m "1.GitHub版本发布与云原生GitOps实战教程: Release v0.03"
-git push origin 1.GitHub版本发布与云原生GitOps实战教程-v0.03
+git tag -a 1.GitHub版本发布与实战教程-v0.03 -m "1.GitHub版本发布与实战教程: Release v0.03"
+git push origin 1.GitHub版本发布与实战教程-v0.03
 ```
 
 Tag 推送后，Release 工作流会自动生成 SHA256，并将 PDF、Markdown 和校验文件上传到 GitHub Release。

@@ -3,12 +3,12 @@ layout: default
 title: 首页
 ---
 
-# GitHub 版本发布与云原生 GitOps 实战教程
+# GitHub 版本发布与实战教程
 
 作者：**jason.wa**  
 版本：**v0.02**
 
-本书系统讲解软件版本发布和云原生 GitOps 实践。
+本书系统讲解 GitHub 版本发布和 GitOps 实践。
 
 ## 阅读
 
