@@ -3,7 +3,7 @@ layout: default
 title: 首页
 ---
 
-# SRv6网络编程：从IPv6基础到生产实践
+# SRv6网络基础教程
 
 作者：**jason.wa**  
 版本：**v0.02**

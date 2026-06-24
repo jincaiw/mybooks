@@ -1,4 +1,4 @@
-# SRv6网络编程：从IPv6基础到生产实践
+# SRv6网络基础教程
 
 **RFC 8754 / RFC 8986 图解、Linux 实验、VPN、运维与故障排查**
 
@@ -30,6 +30,6 @@ python3 scripts/validate.py
 ## 发布新版本
 
 ```bash
-git tag -a 2.SRv6网络编程_从IPv6基础到生产实践-v0.03 -m "2.SRv6网络编程_从IPv6基础到生产实践: Release v0.03"
-git push origin 2.SRv6网络编程_从IPv6基础到生产实践-v0.03
+git tag -a 2.SRv6网络基础教程-v0.03 -m "2.SRv6网络基础教程: Release v0.03"
+git push origin 2.SRv6网络基础教程-v0.03
 ```

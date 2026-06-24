@@ -1,5 +1,5 @@
-title: SRv6网络编程：从IPv6基础到生产实践
-description: RFC 8754 / RFC 8986 图解、Linux 实验、VPN、运维与故障排查
+title: SRv6网络基础教程
+description: SRv6 基础原理、实验与生产实践
 theme: jekyll-theme-cayman
 lang: zh-CN
 show_downloads: true
