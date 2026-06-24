@@ -61,7 +61,7 @@ jobs:
           printf -- 'title: MyBook\ntheme: jekyll-theme-cayman\nlang: zh-CN\n' > docs/_config.yml
         name: Jekyll config
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
         with:
           source: docs
 
