@@ -37,17 +37,19 @@ jobs:
             cd "${{ github.workspace }}"
           done
 
-      - name: Assemble site
+      - name: Assemble site into ./docs
         run: |
-          mkdir -p _site
+          mkdir -p docs
           for book in ${{ steps.books.outputs.list }}; do
-            mkdir -p "_site/$book"
-            cp -r "books/$book/docs/"* "_site/$book/"
+            if [ -d "books/$book/docs" ]; then
+              mkdir -p "docs/$book"
+              cp -r "books/$book/docs/"* "docs/$book/"
+            fi
           done
 
-      - name: Create root index
+      - name: Create root index page
         run: |
-          cat > _site/index.md << 'INDEX'
+          cat > docs/index.md << 'INDEXEOF'
 ---
 layout: default
 title: MyBook - 书籍列表
@@ -55,27 +57,39 @@ title: MyBook - 书籍列表
 
 # MyBook 书籍列表
 
-INDEX
+INDEXEOF
           for book in ${{ steps.books.outputs.list }}; do
             TITLE=$(head -1 "books/$book/README.md" 2>/dev/null | sed 's/^# *//' || echo "$book")
-            echo "- [$TITLE](${book}/)" >> _site/index.md
+            echo "- [$TITLE](${book}/)" >> docs/index.md
           done
+          echo "" >> docs/index.md
+
+      - name: Create root _config.yml for Jekyll
+        run: |
+          cat > docs/_config.yml << 'CONFIG'
+title: MyBook
+description: A collection of books
+theme: jekyll-theme-cayman
+lang: zh-CN
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+CONFIG
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
-          source: _site
+          source: docs
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: _site
-          destination: ./_site_out
+          source: ./docs
+          destination: ./_site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
-        with:
-          path: ./_site_out
 
   deploy:
     environment:
