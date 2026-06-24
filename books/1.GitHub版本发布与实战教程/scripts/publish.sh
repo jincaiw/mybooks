@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
+# ⚠️  DEPRECATED — 请使用根目录 RELEASE.md 中的标准化流程。
+#     此脚本有 git init 破坏性操作，仅保留供参考。
 set -euo pipefail
+
+echo "⚠️  DEPRECATED: 请使用项目根目录 RELEASE.md 中的发布流程" >&2
+echo "   替代方案: make release BOOK=当前书目录名" >&2
+echo "" >&2
 
 OWNER="jincaiw"
 REPO="mybook"

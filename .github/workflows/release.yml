@@ -55,9 +55,11 @@ jobs:
       - name: Verify tag matches VERSION file
         shell: bash
         run: |
-          EXPECTED="$(tr -d '[:space:]' < "books/${{ steps.parse.outputs.book }}/VERSION")"
+          BOOK_DIR="books/${{ steps.parse.outputs.book }}"
+          EXPECTED="$(tr -d '[:space:]' < "${BOOK_DIR}/VERSION")"
           if [[ "${{ steps.parse.outputs.version }}" != "$EXPECTED" ]]; then
-            echo "ERROR: Tag version (v${{ steps.parse.outputs.version }}) != VERSION file ($EXPECTED)"
+            echo "ERROR: Tag version (v${{ steps.parse.outputs.version }})"
+            echo "!= VERSION file ($EXPECTED)"
             exit 1
           fi
 
@@ -71,15 +73,33 @@ jobs:
 
           # Determine which assets exist
           ASSETS=()
-          for f in "${BOOK_DIR}/book/book-v${VERSION}.pdf" "${BOOK_DIR}/book/book-v${VERSION}.md" "${BOOK_DIR}/book/SHA256SUMS.txt"; do
-            if [[ -f "$f" ]]; then
-              ASSETS+=("$f")
-            fi
+          for ext in pdf md SHA256SUMS.txt; do
+            f="${BOOK_DIR}/book/book-v${VERSION}.${ext}"
+            # SHA256SUMS.txt has no book-v{version} prefix
+            [[ "$ext" == "SHA256SUMS.txt" ]] && \
+              f="${BOOK_DIR}/book/SHA256SUMS.txt"
+            [[ -f "$f" ]] && ASSETS+=("$f")
           done
 
+          # Release notes: prefer release-notes/v{version}.md, fallback to
+          # auto-extract from CHANGELOG.md
           NOTES_FILE="${BOOK_DIR}/release-notes/v${VERSION}.md"
           if [[ ! -f "$NOTES_FILE" ]]; then
-            NOTES_FILE=""
+            echo "⚠️  release-notes not found, extracting from CHANGELOG..."
+            NOTES_FILE=$(mktemp)
+            awk -v ver="$VERSION" '
+              /^## \[/{
+                in_block = (index($0, "[" ver "]") > 0 || \
+                            index($0, "[" ver " ") > 0)
+              }
+              in_block { print }
+              /^## \[/ && !(index($0, "[" ver "]") > 0 || \
+                            index($0, "[" ver " ") > 0) && in_block { exit }
+            ' "${BOOK_DIR}/CHANGELOG.md" > "$NOTES_FILE" 2>/dev/null
+            if [[ ! -s "$NOTES_FILE" ]]; then
+              NOTES_FILE=""
+              echo "⚠️  No changelog entry for v${VERSION}, no release notes"
+            fi
           fi
 
           echo "Creating release: $TAG for $BOOK (v$VERSION)"

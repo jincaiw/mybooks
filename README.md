@@ -45,6 +45,8 @@ git push origin 1.GitHub版本发布与实战教程-v0.03   # → 自动创建 R
 > - `2.SRv6网络基础教程-v0.03`
 > - `3.高考志愿填报红宝书-v0.1`
 
+> 💡 也支持根目录 Makefile 一键发布，详见 [RELEASE.md](RELEASE.md)。
+
 ## 添加新书
 
 ```bash
