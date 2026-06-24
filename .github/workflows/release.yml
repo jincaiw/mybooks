@@ -1,0 +1,55 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag, for example v0.02
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Validate book
+        working-directory: books/book-1
+        run: python3 scripts/validate.py
+      - name: Resolve tag
+        id: tag
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create release
+        shell: bash
+        run: |
+          VERSION="$(tr -d '[:space:]' < books/book-1/VERSION)"
+          TAG="${{ steps.tag.outputs.value }}"
+          test "$TAG" = "v$VERSION"
+          gh release create "$TAG" \
+            "books/book-1/book/book-v${VERSION}.pdf" \
+            "books/book-1/book/book-v${VERSION}.md" \
+            "books/book-1/book/SHA256SUMS.txt" \
+            --title "$TAG" \
+            --notes-file "books/book-1/release-notes/v${VERSION}.md" \
+            --verify-tag
