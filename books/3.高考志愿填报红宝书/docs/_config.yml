@@ -1,0 +1,11 @@
+title: 高考志愿填报红宝书
+description: 高考志愿填报方法论、核查流程与决策工具
+theme: jekyll-theme-cayman
+lang: zh-CN
+show_downloads: true
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+exclude:
+  - README.md
