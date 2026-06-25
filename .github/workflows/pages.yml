@@ -80,9 +80,10 @@ jobs:
             title=""
             desc=""
             if [ -f "$book_readme" ]; then
-              title="$(head -1 "$book_readme" | sed 's/^# *//' | sed 's/V[0-9].*$//' | sed 's/ *$//')"
-              # First meaningful description line (skip empty, badges, blockquotes)
-              desc="$(tail -n +2 "$book_readme" | grep -v '^$' | grep -v '^\[!' | grep -v '^>' | grep -v '^---' | head -1 | sed 's/^\*\*//;s/\*\*.*//;s/["<>]//g')"
+              title="$(head -1 "$book_readme" | sed 's/^# *//' | sed 's/ V[0-9].*$//')"
+              # Find description: skip author lines, badges, empty lines, etc.
+              # Look for **bold description** line or first meaningful text
+              desc="$(tail -n +2 "$book_readme" | grep -v '^$' | grep -v '^\[!' | grep -v '^- 作者' | grep -v '^作者' | grep -v '^#' | grep -v '^\[' | grep -v '^\`' | grep -v '^---' | grep -v '^</' | head -1 | sed 's/^> *//;s/^\*\*//;s/\*\*.*$//')"
             fi
             [ -z "$title" ] && title="$b"
 
