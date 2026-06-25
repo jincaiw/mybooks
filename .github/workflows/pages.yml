@@ -47,23 +47,92 @@ jobs:
               mkdir -p "docs/$b"
               cp -r "$d/"* "docs/$b/"
             fi
+            # Copy cover images for the index page
+            cover_src="books/$b/assets/cover.png"
+            cover_dst="docs/$b/assets/cover.png"
+            if [ -f "$cover_src" ] && [ ! -f "$cover_dst" ]; then
+              mkdir -p "$(dirname "$cover_dst")"
+              cp "$cover_src" "$cover_dst"
+            fi
           done
         name: Assemble site
 
-      - run: |
-          printf '%s\n' \
-            '---' 'layout: default' \
-            'title: MyBook' '---' \
-            '' '# MyBook' '' > docs/index.md
+      - name: Create index
+        run: |
+          cat > docs/index.md << 'EOF'
+          ---
+          layout: default
+          title: MyBook
+          ---
+
+          <section class="hero">
+            <h1>我的书库</h1>
+            <p class="tagline">多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线</p>
+            <div class="divider"></div>
+          </section>
+
+          <section class="bookshelf">
+          EOF
+
           for b in ${{ steps.books.outputs.list }}; do
-            printf -- '- [%s](%s/)\n' "$b" "$b" >> docs/index.md
+            # Extract info from each book's README
+            book_readme="books/$b/README.md"
+            title=""
+            desc=""
+            if [ -f "$book_readme" ]; then
+              r="$(cat "$book_readme")"
+              title="$(echo "$r" | head -1 | sed 's/^# *//' | sed 's/ V[0-9].*$//')"
+              desc="$(echo "$r" | sed -n '2p' | sed 's/^> *//;s/\*\*//g')"
+            fi
+            [ -z "$title" ] && title="$b"
+
+            version="$(cat "books/$b/VERSION" 2>/dev/null | tr -d '[:space:]' || echo '')"
+            cover="./$b/assets/cover.png"
+            [ ! -f "docs/$cover" ] && cover=""
+
+            # Write book card
+            echo '<article class="book-card">' >> docs/index.md
+            echo '  <div class="book-card-inner">' >> docs/index.md
+            echo '    <div class="book-cover-wrap">' >> docs/index.md
+            if [ -n "$cover" ]; then
+              echo "      <img class=\"book-cover\" src=\"$cover\" alt=\"${title} 封面\" loading=\"lazy\">" >> docs/index.md
+            else
+              echo '      <div class="book-cover-placeholder">📖</div>' >> docs/index.md
+            fi
+            echo '    </div>' >> docs/index.md
+            echo '    <div class="book-body">' >> docs/index.md
+            echo "      <h2 class=\"book-title\">$title</h2>" >> docs/index.md
+            if [ -n "$desc" ]; then
+              echo "      <p class=\"book-desc\">$desc</p>" >> docs/index.md
+            fi
+            echo '      <div class="book-meta">' >> docs/index.md
+            if [ -n "$version" ]; then
+              echo "        <span class=\"book-version\">v$version</span>" >> docs/index.md
+            fi
+            echo "        <a class=\"book-link\" href=\"$b/\">阅读</a>" >> docs/index.md
+            echo '      </div>' >> docs/index.md
+            echo '    </div>' >> docs/index.md
+            echo '  </div>' >> docs/index.md
+            echo '</article>' >> docs/index.md
           done
-        name: Create index
+
+          echo '</section>' >> docs/index.md
 
       - run: |
-          printf '%s\n' 'title: MyBook' \
-            'theme: jekyll-theme-cayman' \
-            'lang: zh-CN' > docs/_config.yml
+          cat > docs/_config.yml << 'EOF'
+          title: MyBook
+          description: 多本书籍仓库，每本书独立维护，共享 CI/CD 流水线
+          lang: zh-CN
+          markdown: kramdown
+          kramdown:
+            input: GFM
+            syntax_highlighter: rouge
+          exclude:
+            - README.md
+            - Gemfile
+            - Gemfile.lock
+            - vendor/
+          EOF
         name: Jekyll config
 
       - uses: actions/jekyll-build-pages@v1

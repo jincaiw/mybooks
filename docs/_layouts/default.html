@@ -1,129 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1a1a2e">
-  <title>{% if page.title %}{{ page.title }} — {% endif %}MyBook · 多书仓库</title>
-  <meta name="description" content="多本书籍仓库，每本书独立维护，共享 CI/CD 流水线">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ '/assets/css/mybook.css' | relative_url }}">
-  {% seo %}
-</head>
-<body>
-
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-logo">
-        <span class="logo-icon">📚</span>
-        <span class="logo-text">MyBook</span>
-      </a>
-      <nav class="header-nav">
-        <a href="https://github.com/jincaiw/mybooks" target="_blank" rel="noopener" class="nav-link">
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-          <span>GitHub</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <title>
+      {% if page.title %}{{ page.title }} — {% endif %}MyBook · 多书仓库
+    </title>
+    <meta
+      name="description"
+      content="多本书籍仓库，每本书独立维护，共享 CI/CD 流水线"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/css/mybook.css' | relative_url }}"
+    />
+    {% seo %}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="{{ '/' | relative_url }}" class="site-logo">
+          <span class="logo-icon">📚</span>
+          <span class="logo-text">MyBook</span>
         </a>
-      </nav>
-    </div>
-  </header>
+        <nav class="header-nav">
+          <a
+            href="https://github.com/jincaiw/mybooks"
+            target="_blank"
+            rel="noopener"
+            class="nav-link"
+          >
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+              />
+            </svg>
+            <span>GitHub</span>
+          </a>
+        </nav>
+      </div>
+    </header>
 
-  <main class="main-content" role="main">
-    {{ content }}
-  </main>
+    <main class="main-content" role="main">{{ content }}</main>
 
-  <script>
-  (function() {
-    // Enhance index page: transform book list into cards
-    var main = document.querySelector('.main-content');
-    if (!main) return;
+    <script>
+    (function() {
+      // If CI already generated cards, skip JS transformation
+      if (document.querySelector('.bookshelf')) return;
 
-    var h1 = main.querySelector('h1');
-    var ul = main.querySelector('ul');
-    if (!ul) return; // not the index page
+      // Otherwise, fallback: transform the plain list into cards client-side
+      var main = document.querySelector('.main-content');
+      if (!main) return;
 
-    var links = ul.querySelectorAll('li a');
-    if (!links.length) return;
+      var ul = main.querySelector('ul');
+      if (!ul) return; // not the index page
 
-    // Replace h1 with hero section
-    if (h1) {
-      var hero = document.createElement('section');
-      hero.className = 'hero';
-      hero.innerHTML = [
-        '<h1>我的书库</h1>',
-        '<p class="tagline">多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线</p>',
-        '<div class="divider"></div>'
-      ].join('');
-      h1.replaceWith(hero);
-    }
+      var links = ul.querySelectorAll('li a');
+      if (!links.length) return;
 
-    // Create bookshelf grid
-    var shelf = document.createElement('section');
-    shelf.className = 'bookshelf';
-
-    // Book info (update this when adding new books)
-    var books = {
-      '1.GitHub版本发布与实战教程': { desc: 'GitOps、CI/CD、Helm、Kustomize、ArgoCD、渐进式交付', ver: 'v0.02' },
-      '2.SRv6网络基础教程': { desc: 'RFC 8754 / RFC 8986 图解、Linux 实验、VPN、运维与故障排查', ver: 'v0.02' },
-      '3.高考志愿填报红宝书': { desc: '从「能录取」走向「适合发展」——位次 × 院校 × 专业 × 城市 × 产业 × 就业', ver: 'v0.1' },
-      '4.codex橙皮书': { desc: '从安装到实战案例的全链路 Codex 使用指南（非官方开源）', ver: 'v0.1' }
-    };
-
-    function handleCoverError(img) {
-      var wrap = img.parentElement;
-      if (!wrap) return;
-      var ph = document.createElement('div');
-      ph.className = 'book-cover-placeholder';
-      ph.textContent = '📖';
-      wrap.replaceChild(ph, img);
-    }
-
-    links.forEach(function(a) {
-      var name = a.textContent.trim();
-      var href = a.getAttribute('href');
-      var info = books[name] || { desc: '', ver: '' };
-      var coverUrl = './' + name + '/assets/cover.png';
-
-      var card = document.createElement('article');
-      card.className = 'book-card';
-
-      var coverHtml = '<img class="book-cover" src="' + coverUrl +
-        '" alt="' + name + ' 封面" loading="lazy" onerror="handleCoverError(this)">';
-
-      var metaHtml = '';
-      if (info.ver) {
-        metaHtml += '<span class="book-version">' + info.ver + '</span>';
+      // Replace h1 with hero section
+      var h1 = main.querySelector('h1');
+      if (h1) {
+        var hero = document.createElement('section');
+        hero.className = 'hero';
+        hero.innerHTML = [
+          '<h1>我的书库</h1>',
+          '<p class="tagline">多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线</p>',
+          '<div class="divider"></div>'
+        ].join('');
+        h1.replaceWith(hero);
       }
-      metaHtml += '<a class="book-link" href="' + href + '">阅读</a>';
 
-      card.innerHTML = [
-        '<div class="book-card-inner">',
-        '  <div class="book-cover-wrap">' + coverHtml + '</div>',
-        '  <div class="book-body">',
-        '    <h2 class="book-title">' + name + '</h2>',
-        '    <p class="book-desc">' + info.desc + '</p>',
-        '    <div class="book-meta">' + metaHtml + '</div>',
-        '  </div>',
-        '</div>'
-      ].join('');
-      shelf.appendChild(card);
-    });
+      var shelf = document.createElement('section');
+      shelf.className = 'bookshelf';
 
-    ul.replaceWith(shelf);
-  })();
-  </script>
+      var books = {
+        '1.GitHub版本发布与实战教程': { desc: 'GitOps、CI/CD、Helm、Kustomize、ArgoCD、渐进式交付', ver: 'v0.02' },
+        '2.SRv6网络基础教程': { desc: 'RFC 8754 / RFC 8986 图解、Linux 实验、VPN、运维与故障排查', ver: 'v0.02' },
+        '3.高考志愿填报红宝书': { desc: '从「能录取」走向「适合发展」——位次 × 院校 × 专业 × 城市 × 产业 × 就业', ver: 'v0.1' },
+        '4.codex橙皮书': { desc: '从安装到实战案例的全链路 Codex 使用指南（非官方开源）', ver: 'v0.1' }
+      };
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p class="footer-text">
-        由 <a href="https://github.com/jincaiw" target="_blank" rel="noopener">jincaiw</a> 维护 ·
-        <a href="https://github.com/jincaiw/mybooks" target="_blank" rel="noopener">GitHub 仓库</a> ·
-        <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
-      </p>
-      <p class="footer-copy">基于 Jekyll · GitHub Pages 构建</p>
-    </div>
-  </footer>
+      function handleCoverError(img) {
+        var wrap = img.parentElement;
+        if (!wrap) return;
+        var ph = document.createElement('div');
+        ph.className = 'book-cover-placeholder';
+        ph.textContent = '📖';
+        wrap.replaceChild(ph, img);
+      }
 
-</body>
+      links.forEach(function(a) {
+        var name = a.textContent.trim();
+        var href = a.getAttribute('href');
+        var info = books[name] || { desc: '', ver: '' };
+        var coverUrl = './' + name + '/assets/cover.png';
+
+        var card = document.createElement('article');
+        card.className = 'book-card';
+
+        var coverHtml = '<img class="book-cover" src="' + coverUrl +
+          '" alt="' + name + ' 封面" loading="lazy" onerror="handleCoverError(this)">';
+
+        var metaHtml = info.ver
+          ? '<span class="book-version">' + info.ver + '</span><a class="book-link" href="' + href + '">阅读</a>'
+          : '<a class="book-link" href="' + href + '">阅读</a>';
+
+        card.innerHTML = [
+          '<div class="book-card-inner">',
+          '  <div class="book-cover-wrap">' + coverHtml + '</div>',
+          '  <div class="book-body">',
+          '    <h2 class="book-title">' + name + '</h2>',
+          '    <p class="book-desc">' + info.desc + '</p>',
+          '    <div class="book-meta">' + metaHtml + '</div>',
+          '  </div>',
+          '</div>'
+        ].join('');
+        shelf.appendChild(card);
+      });
+
+      ul.replaceWith(shelf);
+    })();
+    </script>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-text">
+          由
+          <a href="https://github.com/jincaiw" target="_blank" rel="noopener"
+            >jincaiw</a
+          >
+          维护 ·
+          <a
+            href="https://github.com/jincaiw/mybooks"
+            target="_blank"
+            rel="noopener"
+            >GitHub 仓库</a
+          >
+          ·
+          <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+        </p>
+        <p class="footer-copy">基于 Jekyll · GitHub Pages 构建</p>
+      </div>
+    </footer>
+  </body>
 </html>
