@@ -19,7 +19,7 @@ jobs:
     outputs:
       books: ${{ steps.list.outputs.books }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: list
         run: |
           BOOKS=$(ls -d books/*/ 2>/dev/null | sed 's|books/||;s|/||' | jq -R -s -c 'split("\n") | map(select(length > 0))')
@@ -35,7 +35,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Validate ${{ matrix.book }}
         working-directory: books/${{ matrix.book }}
         run: |
