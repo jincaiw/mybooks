@@ -1,12 +1,12 @@
 ---
-title: MyBook — 多本书籍仓库
+title: jason.wa的电子书库
 editLink: false
 lastUpdated: false
 ---
 
-# 📚 MyBook
+# 📚 jason.wa的电子书库
 
-<div class="tagline">多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线</div>
+<div class="tagline">从版本发布到网络技术，从高考志愿到 AI 工具——四本书，四种视角</div>
 
 <div class="book-grid">
 

@@ -2,8 +2,8 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
 	lang: "zh-CN",
-	title: "MyBook",
-	description: "多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线",
+	title: "jason.wa的电子书库",
+	description: "jason.wa 编写的技术书籍合集：GitHub 版本发布、SRv6 网络、高考志愿填报、Codex 使用指南",
 
 	base: "/",
 	cleanUrls: true,
