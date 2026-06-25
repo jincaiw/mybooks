@@ -87,6 +87,26 @@ mybook/
 └── README.md                # 本文件
 ```
 
+## 本地预览（VitePress）
+
+已迁移至 VitePress 构建，支持本地预览。
+
+```bash
+# 安装依赖
+npm install
+
+# 本地开发（热更新）
+npm run docs:dev
+
+# 正式构建
+npm run docs:build
+
+# 预览构建产物
+npm run docs:preview
+```
+
+> VitePress 构建后，访问 `http://localhost:4173/mybooks/` 查看网站。
+
 ## 许可证
 
 - 各本书籍正文与图片：CC BY 4.0（详见各书 LICENSE.md）

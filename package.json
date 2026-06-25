@@ -1,0 +1,29 @@
+{
+  "name": "mybook",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "一个仓库管理多本书籍，每本书独立维护，共享 CI/CD 自动化流水线。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev .",
+    "docs:build": "vitepress build .",
+    "docs:preview": "vitepress preview ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jincaiw/mybooks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jincaiw/mybooks/issues"
+  },
+  "homepage": "https://github.com/jincaiw/mybooks#readme",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}

@@ -12,11 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
-
-defaults:
-  run:
-    shell: bash
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -24,124 +20,28 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-
-      - id: books
-        run: |
-          books=$(ls -d books/*/ 2>/dev/null | sed 's|books/||;s|/||' | tr '\n' ' ')
-          echo "list=$books" >> "$GITHUB_OUTPUT"
-
-      - run: |
-          for b in ${{ steps.books.outputs.list }}; do
-            echo "Preparing $b"
-            cd "books/$b"
-            python3 scripts/prepare_pages.py || true
-            cd "$GITHUB_WORKSPACE"
-          done
-        name: Prepare pages
-
-      - run: |
-          mkdir -p docs
-          for b in ${{ steps.books.outputs.list }}; do
-            d="books/$b/docs"
-            if [ -d "$d" ]; then
-              mkdir -p "docs/$b"
-              cp -r "$d/"* "docs/$b/"
-            fi
-            # Copy cover images for the index page
-            cover_src="books/$b/assets/cover.png"
-            cover_dst="docs/$b/assets/cover.png"
-            if [ -f "$cover_src" ] && [ ! -f "$cover_dst" ]; then
-              mkdir -p "$(dirname "$cover_dst")"
-              cp "$cover_src" "$cover_dst"
-            fi
-          done
-        name: Assemble site
-
-      - name: Create index
-        run: |
-          cat > docs/index.md << 'EOF'
-          ---
-          layout: default
-          title: MyBook
-          ---
-
-          <section class="hero">
-            <h1>我的书库</h1>
-            <p class="tagline">多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线</p>
-            <div class="divider"></div>
-          </section>
-
-          <section class="bookshelf">
-          EOF
-
-          for b in ${{ steps.books.outputs.list }}; do
-            # Extract info from each book's README
-            book_readme="books/$b/README.md"
-            title=""
-            desc=""
-            if [ -f "$book_readme" ]; then
-              title="$(head -1 "$book_readme" | sed 's/^# *//' | sed 's/ V[0-9].*$//')"
-              # Find description: skip author lines, badges, empty lines, etc.
-              # Look for **bold description** line or first meaningful text
-              desc="$(tail -n +2 "$book_readme" | grep -v -E '^$|^\[!|^- 作者|^作者|^#|^\[|^\x60|^---|^</|当前版本|状态：' | head -1 | sed 's/^> *//;s/^\*\*//;s/\*\*.*$//' || true)"
-            fi
-            [ -z "$title" ] && title="$b"
-
-            version="$(cat "books/$b/VERSION" 2>/dev/null | tr -d '[:space:]' || echo '')"
-            cover="./$b/assets/cover.png"
-            [ ! -f "docs/$cover" ] && cover=""
-
-            # Write book card
-            echo '<article class="book-card">' >> docs/index.md
-            echo '  <div class="book-card-inner">' >> docs/index.md
-            echo '    <div class="book-cover-wrap">' >> docs/index.md
-            if [ -n "$cover" ]; then
-              echo "      <img class=\"book-cover\" src=\"$cover\" alt=\"${title} 封面\" loading=\"lazy\">" >> docs/index.md
-            else
-              echo '      <div class="book-cover-placeholder">📖</div>' >> docs/index.md
-            fi
-            echo '    </div>' >> docs/index.md
-            echo '    <div class="book-body">' >> docs/index.md
-            echo "      <h2 class=\"book-title\">$title</h2>" >> docs/index.md
-            if [ -n "$desc" ]; then
-              echo "      <p class=\"book-desc\">$desc</p>" >> docs/index.md
-            fi
-            echo '      <div class="book-meta">' >> docs/index.md
-            if [ -n "$version" ]; then
-              echo "        <span class=\"book-version\">v$version</span>" >> docs/index.md
-            fi
-            echo "        <a class=\"book-link\" href=\"$b/\">阅读</a>" >> docs/index.md
-            echo '      </div>' >> docs/index.md
-            echo '    </div>' >> docs/index.md
-            echo '  </div>' >> docs/index.md
-            echo '</article>' >> docs/index.md
-          done
-
-          echo '</section>' >> docs/index.md
-
-      - run: |
-          cat > docs/_config.yml << 'EOF'
-          title: MyBook
-          description: 多本书籍仓库，每本书独立维护，共享 CI/CD 流水线
-          lang: zh-CN
-          markdown: kramdown
-          kramdown:
-            input: GFM
-            syntax_highlighter: rouge
-          exclude:
-            - README.md
-            - Gemfile
-            - Gemfile.lock
-            - vendor/
-          EOF
-        name: Jekyll config
-
-      - uses: actions/jekyll-build-pages@v1
         with:
-          source: ./docs
-          destination: ./_site
+          fetch-depth: 0 # needed for lastUpdated
 
-      - uses: actions/upload-pages-artifact@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build VitePress
+        run: npm run docs:build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .vitepress/dist
 
   deploy:
     runs-on: ubuntu-latest
