@@ -13,7 +13,7 @@
 
 ## 在线阅读
 
-- **GitHub Pages**：<https://jincaiw.github.io/mybooks/>
+- **GitHub Pages**：<https://books.mujizi.com/>
 
 Pages 在每次推送 `main` 分支后自动构建部署，无需手动操作。
 
@@ -105,7 +105,17 @@ npm run docs:build
 npm run docs:preview
 ```
 
-> VitePress 构建后，访问 `http://localhost:4173/mybooks/` 查看网站。
+> VitePress 构建后，访问 `http://localhost:4173/` 查看网站。
+
+## 自定义域名
+
+已配置自定义域名 **books.mujizi.com**。需要完成以下 DNS 设置：
+
+| 记录类型 | 主机记录 | 记录值 |
+|----------|----------|--------|
+| CNAME | books | `jincaiw.github.io.` |
+
+并在 GitHub 仓库 `Settings → Pages → Custom domain` 中填 `books.mujizi.com`。
 
 ## 许可证
 

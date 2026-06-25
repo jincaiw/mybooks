@@ -5,7 +5,7 @@ export default defineConfig({
 	title: "MyBook",
 	description: "多本书籍仓库，每本书独立维护，共享 CI/CD 自动化流水线",
 
-	base: "/mybooks/",
+	base: "/",
 	cleanUrls: true,
 	lastUpdated: true,
 
@@ -17,7 +17,7 @@ export default defineConfig({
 
 	head: [
 		["meta", { name: "theme-color", content: "#1a1a2e" }],
-		["link", { rel: "icon", href: "/mybooks/favicon.ico" }],
+		["link", { rel: "icon", href: "/favicon.ico" }],
 	],
 
 	ignoreDeadLinks: [/\/books\//, /book-v0\.01/],
