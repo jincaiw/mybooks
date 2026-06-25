@@ -80,9 +80,9 @@ jobs:
             title=""
             desc=""
             if [ -f "$book_readme" ]; then
-              r="$(cat "$book_readme")"
-              title="$(echo "$r" | head -1 | sed 's/^# *//' | sed 's/ V[0-9].*$//')"
-              desc="$(echo "$r" | sed -n '2p' | sed 's/^> *//;s/\*\*//g')"
+              title="$(head -1 "$book_readme" | sed 's/^# *//' | sed 's/V[0-9].*$//' | sed 's/ *$//')"
+              # First meaningful description line (skip empty, badges, blockquotes)
+              desc="$(tail -n +2 "$book_readme" | grep -v '^$' | grep -v '^\[!' | grep -v '^>' | grep -v '^---' | head -1 | sed 's/^\*\*//;s/\*\*.*//;s/["<>]//g')"
             fi
             [ -z "$title" ] && title="$b"
 
