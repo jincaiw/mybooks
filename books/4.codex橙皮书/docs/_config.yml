@@ -1,0 +1,11 @@
+title: Codex 橙皮书
+description: 从安装到实战案例的全链路 Codex 使用指南
+theme: jekyll-theme-cayman
+lang: zh-CN
+show_downloads: true
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+exclude:
+  - README.md
